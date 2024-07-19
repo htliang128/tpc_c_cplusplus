@@ -1,0 +1,9 @@
+diff -rupN aliyun-oss-c-sdk-3.11.0/CMakeLists.txt aliyun-oss-c-sdk-3.11.0_patch/CMakeLists.txt
+--- aliyun-oss-c-sdk-3.11.0/CMakeLists.txt	2023-03-20 21:49:10.000000000 +0800
++++ aliyun-oss-c-sdk-3.11.0/CMakeLists.txt	2023-05-10 14:51:49.579039952 +0800
+@@ -117,4 +117,5 @@ include_directories(${APR_INCLUDE_DIR})
+ include_directories(${MINIXML_INCLUDE_DIR})
+ include_directories(${CURL_INCLUDE_DIR})
++link_libraries("-Wl,--allow-shlib-undefined" ${CURL_LIBRARY} ${APR_LIBRARY} ${APR_UTIL_LIBRARY} ${MINIXML_LIBRARY})
+
+ aux_source_directory(oss_c_sdk SRC_LIST)

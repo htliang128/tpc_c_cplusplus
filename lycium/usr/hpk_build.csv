@@ -1,0 +1,17 @@
+openssl_1_0_2u,OpenSSL_1_0_2u,armeabi-v7a
+openssl_1_0_2u,OpenSSL_1_0_2u,arm64-v8a
+zstd_1_5_6,v1.5.6,arm64-v8a
+zlib,v1.2.13,arm64-v8a
+openssl,OpenSSL_1_1_1u,arm64-v8a
+openssl_quic,OpenSSL_1_1_1t-quic1,arm64-v8a
+CUnit,2.1-3,arm64-v8a
+nghttp3,v0.10.0,arm64-v8a
+xz,v5.4.1,arm64-v8a
+libxml2,v2.11.3,arm64-v8a
+nghttp2,v1.52.0,arm64-v8a
+libtool,2.4.6,arm64-v8a
+minixml,3.3.1,arm64-v8a
+curl,curl-8_8_0,arm64-v8a
+apr,1.7.4,arm64-v8a
+apr-util,1.6.3,arm64-v8a
+aliyun-oss-c-sdk,3.11.0,arm64-v8a

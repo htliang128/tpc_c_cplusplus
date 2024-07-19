@@ -1,0 +1,56 @@
+# Contributor: tvBrave<tianyong13@huawei.com>
+# Maintainer: tvBrave <tianyong13@huawei.com>
+pkgname=diff-match-patch-cpp-stl
+pkgver=master
+pkgrel=0
+pkgdesc="C++ STL variant of https://code.google.com/p/google-diff-match-patch."
+url="https://github.com/leutloff/diff-match-patch-cpp-stl"
+archs=("arm64-v8a")
+license=("Apache License 2.0")
+depends=()
+makedepends=()
+
+source="https://github.com/leutloff/$pkgname/archive/refs/heads/$pkgver.zip"
+
+autounpack=true
+downloadpackage=true
+buildtools="cmake"
+
+builddir=$pkgname-${pkgver}
+packagename=$builddir.zip
+
+prepare() {
+   mkdir -p $builddir/$ARCH-build
+}
+
+build() {
+    cd $builddir/
+    ${OHOS_SDK}/native/build-tools/cmake/bin/cmake "$@" -DOHOS_ARCH=$ARCH -B$ARCH-build -S./ -L > `pwd`/$ARCH-build/build.log 2>&1
+    make -j4 -C $ARCH-build >> `pwd`/$ARCH-build/build.log 2>&1
+    ret=$?
+    cd $OLDPWD
+    return $ret
+}
+
+package() {
+    install_dir=${LYCIUM_ROOT}/usr/${pkgname}/${ARCH}
+    mkdir -p ${install_dir}/bin
+    cd ${builddir}/$ARCH-build/
+    cp -af diff_match_patch_test_string ${install_dir}/bin
+    cp -af diff_match_patch_test_wstring ${install_dir}/bin
+    cd ${OLDPWD}
+
+    return 0
+}
+
+check() {
+    echo "The test must be on an OpenHarmony device!"
+    # 在OpenHarmony开发板中执行用例
+    # ./diff_match_patch_test_string
+    # ./diff_match_patch_test_wstring
+}
+
+# 清理环境
+cleanbuild(){
+    rm -rf ${PWD}/$builddir #${PWD}/$packagename
+}

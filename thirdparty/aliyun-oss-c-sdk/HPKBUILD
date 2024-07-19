@@ -1,0 +1,59 @@
+pkgname=aliyun-oss-c-sdk
+pkgver=3.11.0
+pkgrel=0
+pkgdesc="Alibaba Cloud Object Storage Service (OSS) is a cloud storage service provided by Alibaba Cloud, featuring massive capacity, security, a low cost, and high reliability."
+url="http://oss.aliyun.com/"
+archs=("arm64-v8a")
+license=("Apache License 2.0")
+depends=("curl" "apr" "apr-util" "minixml")
+makedepends=()
+
+source="https://github.com/aliyun/aliyun-oss-c-sdk/archive/refs/tags/3.11.0.tar.gz"
+
+autounpack=true
+downloadpackage=true
+patchflag=true
+buildtools="cmake"
+
+builddir=aliyun-oss-c-sdk-3.11.0
+packagename=aliyun-oss-c-sdk-3.11.0.tar.gz
+patchflag=true
+
+prepare() {
+    if $patchflag
+    then
+        cd $builddir
+        # 编译识别 OpenHarmony 系统
+        patch -p1 < `pwd`/../oss_c_sdk_oh_pkg.patch
+        # patch只需要打一次,关闭打patch
+        patchflag=false
+        cd $OLDPWD
+    fi
+
+    mkdir -p $builddir/$ARCH-build
+}
+
+build() {
+    cd $builddir
+    cmake -DCMAKE_TOOLCHAIN_FILE=${OHOS_SDK}/native/build/cmake/ohos.toolchain.cmake "$@" -DOHOS_ARCH=$ARCH -DCURL_INCLUDE_DIR=$LYCIUM_ROOT/usr/curl/$ARCH/include -DCURL_LIBRARY=$LYCIUM_ROOT/usr/curl/$ARCH/lib/libcurl.so -DAPR_INCLUDE_DIR=$LYCIUM_ROOT/usr/apr/$ARCH/include/apr-1 -DAPR_LIBRARY=$LYCIUM_ROOT/usr/apr/$ARCH/lib/libapr-1.so -DAPR_UTIL_INCLUDE_DIR=$LYCIUM_ROOT/usr/apr/$ARCH/include/apr-1 -DAPR_UTIL_LIBRARY=$LYCIUM_ROOT/usr/apr/$ARCH/lib/libaprutil-1.so -DMINIXML_INCLUDE_DIR=$LYCIUM_ROOT/usr/minixml/$ARCH/include -DMINIXML_LIBRARY=$LYCIUM_ROOT/usr/minixml/$ARCH/lib/libmxml.so -DAPR_CONFIG_BIN=$LYCIUM_ROOT/usr/apr/$ARCH/bin/apr-1-config -DAPU_CONFIG_BIN=$LYCIUM_ROOT/usr/apr/$ARCH/bin/apu-1-config -B$ARCH-build -S./ -L > `pwd`/$ARCH-build/build.log 2>&1
+    make -j4 -C $ARCH-build >> `pwd`/$ARCH-build/build.log 2>&1
+    ret=$?
+    cd $OLDPWD
+    return $ret
+}
+
+package() {
+    cd "$builddir"
+    make -C $ARCH-build install >> `pwd`/$ARCH-build/build.log 2>&1
+    cd $OLDPWD
+}
+
+check() {
+    echo "The test must be on an OpenHarmony device!"
+}
+
+# 清理环境
+cleanbuild(){
+    rm -rf ${PWD}/$builddir #${PWD}/$packagename
+}
+
