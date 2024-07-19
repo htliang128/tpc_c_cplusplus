@@ -2,6 +2,9 @@
 鸿蒙适配三方开源 分享用
 最新适配：
 Aliyun-oss-c-sdk
+minixml
+apr-util
+curl
 
 [适配直达](https://github.com/htliang128/tpc_c_cplusplus/tree/main/lycium/usr)
 
